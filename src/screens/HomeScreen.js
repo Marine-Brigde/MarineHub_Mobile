@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   View,
@@ -8,7 +8,9 @@ import {
   StyleSheet,
   Image,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Header from "../components/Header"; 
+
 const services = [
   { title: "Marine Freight", icon: require("../assets/marine.jpg") },
   { title: "Ocean Freight", icon: require("../assets/ocean.jpg") },
@@ -17,11 +19,21 @@ const services = [
 ];
 
 const HomeScreen = () => {
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const name = await AsyncStorage.getItem("username");
+      setUsername(name || "User");
+    };
+    fetchUser();
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
-      <Header title="HomeScreen" user="S" />
+      <Header title="HomeScreen" user={username.charAt(0).toUpperCase()} />
 
-      <Text style={styles.welcome}>Welcome, Samantha</Text>
+      <Text style={styles.welcome}>Welcome, {username}</Text>
       <Text style={styles.title}>Marine Tracking</Text>
 
       <TextInput
